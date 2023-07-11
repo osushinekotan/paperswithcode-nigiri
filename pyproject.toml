@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "paperswithcode-nigiri"
+version = "0.1.0"
+description = ""
+authors = ["masato <spmt3710@gmail.com>"]
+readme = "README.md"
+packages = [{include = "paperswithcode_nigiri"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+uvicorn = "^0.22.0"
+paperswithcode-client = "^0.3.1"
+pydantic = "1.6.2"
+fastapi = "0.96.0"
+openai = "^0.27.8"
+slackweb = "^1.0.5"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.277"
+pytest = "^7.4.0"
+black = "21.5b1"
+mypy = "1.0.0"
+ipykernel = "^6.24.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py311" 
+unfixable = ["F401", "F841"]
+ignore = ["E501"]
+line-length = 120
+
+[tool.black]
+line-length = 120
+
+[tool.mypy]
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+    "tests.*",
+]
+ignore_errors = true
