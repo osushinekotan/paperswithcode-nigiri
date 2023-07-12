@@ -41,7 +41,7 @@ def summarize_abstract(
         str: 要約結果
     """
     openai.api_key = openai_api_key
-    response = openai.ChatCompletion.create(
+    response = openai.ChatCompletion.create(  # type: ignore
         model=model_name,
         messages=[
             {"role": "user", "content": PROMPT.format(abstract)},
