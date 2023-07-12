@@ -1,8 +1,14 @@
-from paperswithcode import PapersWithCodeClient
+import requests
+
+from paperswithcode_nigiri.const import PWC_SEARCH_ENDPINT
+
+
+def get_params(page: int, items_per_page: int) -> dict:
+    params = {"page": str(page), items_per_page: "items_per_page"}
+    return params
 
 
 def search_papers(
-    client: PapersWithCodeClient,
     keyword: str,
     page: int = 1,
     items_per_page: int = 10,
@@ -20,7 +26,9 @@ def search_papers(
         list[dict]: 各論文に関する情報を含む辞書のリスト。各辞書には'title'、'abstract'、
                     'url_abs'、'url_pdf'、'url_repo'、'stars'、'framework'などのキーが含まれてる
     """
-    papers = client.search(page=page, items_per_page=items_per_page, q=keyword)
+
+    params = get_params(page, items_per_page=items_per_page)
+    papers = requests.get(PWC_SEARCH_ENDPINT.format(keyword=keyword), params=params).json()
     paper_informations = []
     for result in papers.results:
         paper = result.paper
