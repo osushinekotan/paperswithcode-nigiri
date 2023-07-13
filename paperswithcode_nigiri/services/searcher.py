@@ -3,8 +3,8 @@ import requests
 from paperswithcode_nigiri.const import PWC_SEARCH_ENDPINT
 
 
-def get_params(page: int, items_per_page: int) -> dict:
-    params = {"page": str(page), items_per_page: "items_per_page"}
+def get_params(keyword, page: int, items_per_page: int) -> dict:
+    params = {"q": keyword, "page": str(page), "items_per_page": str(items_per_page)}
     return params
 
 
@@ -27,20 +27,20 @@ def search_papers(
                     'url_abs'、'url_pdf'、'url_repo'、'stars'、'framework'などのキーが含まれてる
     """
 
-    params = get_params(page, items_per_page=items_per_page)
-    papers = requests.get(PWC_SEARCH_ENDPINT.format(keyword=keyword), params=params).json()
+    params = get_params(keyword, page, items_per_page=items_per_page)
+    papers = requests.get(PWC_SEARCH_ENDPINT, params=params).json()
     paper_informations = []
-    for result in papers.results:
-        paper = result.paper
-        repository = result.repository
+    for result in papers["results"]:
+        paper = result["paper"]
+        repository = result["repository"]
         paper_info = dict(
-            title=paper.title,
-            abstract=paper.abstract,
-            url_abs=paper.url_abs,
-            url_pdf=paper.url_pdf,
-            url_repo=repository.url,
-            stars=repository.stars,
-            framework=repository.framework,
+            title=paper["title"],
+            abstract=paper["abstract"],
+            url_abs=paper["url_abs"],
+            url_pdf=paper["url_pdf"],
+            url_repo=repository["url"],
+            stars=repository["stars"],
+            framework=repository["framework"],
         )
         paper_informations.append(paper_info)
     return paper_informations
