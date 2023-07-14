@@ -1,3 +1,4 @@
+import json
 import os
 
 import openai
@@ -5,48 +6,33 @@ import openai
 PROMPT = """
     あなたは世界有数の研究者です。以下の論文のタイトルとアブストラクトを日本語に翻訳してください。
     その後要約してください。またあなたが知っている類似論文のタイトルを教えてください。
-    出力は以下のフォーマットに従ってください。
-    - Title: セクションに日本語翻訳結果を記載
-    - Abstract: セクションに日本語翻訳結果を記載。
-    - Summary: セクションに要約結果を箇条書きで何点か記載
-    - Reference: セクションに類似論文のタイトルを箇条書きで何点か記載
+    最終的なアウトプットは以下キーを持つ辞書形式でお願いします。
+    アウトプットに対して python の json.loads(output) をするので、そこでエラーが出ないようにして下さい。
+
+    "title": タイトルの日本語翻訳結果を記載,
+    "abstract": アブストラクトの日本語翻訳結果を記載,
+    "summary": 要約結果を箇条書き(リスト形式)で何点か記載する,
 
     Title : {title}
-    
-    Abstract : 
-    {abstract}
-
-    フォーマット : 
-    ```
-    Title
-    Abstract
-    Summary
-    Reference
-    ```
+    Abstract : {abstract}
 """
 
 
-def get_meta_info(paper: dict) -> str:
-    keys = ["title", "url_abs", "url_pdf", "url_repo", "stars", "framework"]
-    info = "\nMeta:\n"
-    for k in keys:
-        info += f"- {k}: {paper[k]}\n"
-    return info
+def get_meta_info(paper: dict) -> dict:
+    return {"meta": paper}
 
 
-def make_summary(paper: dict) -> str:
+def make_summary(paper: dict) -> dict:
     summary_by_llm = summarize(
         title=paper["title"],
         abstract=paper["abstract"],
-        openai_api_key=os.getenv("OPENAI_API_KEY"),
-        model_name=os.getenv("LLM_MODEL"),
+        openai_api_key=str(os.getenv("OPENAI_API_KEY")),
+        model_name=str(os.getenv("LLM_MODEL")),
         temperature=float(str(os.getenv("TEMPERATURE"))),
     )
     meta_info = get_meta_info(paper=paper)
-    pre_line = "*" * 150
-    formatted_summary = "\n" + pre_line + "\n" + summary_by_llm + "\n" + meta_info
-
-    return formatted_summary
+    output_summary = {**summary_by_llm, **meta_info}
+    return output_summary
 
 
 def summarize(
@@ -55,7 +41,7 @@ def summarize(
     openai_api_key: str,
     model_name: str = "gpt-3.5-turbo",
     temperature: float = 0.5,
-) -> str:
+) -> dict:
     """
     OpenAIのLLMを使用して、論文のアブストを要約する。
 
@@ -77,4 +63,6 @@ def summarize(
         ],
         temperature=temperature,
     )
-    return response["choices"][0]["message"]["content"]
+    summary = response["choices"][0]["message"]["content"]
+    summary = json.loads(summary)
+    return summary
