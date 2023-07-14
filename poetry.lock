@@ -1544,16 +1544,6 @@ files = [
 ]
 
 [[package]]
-name = "slackweb"
-version = "1.0.5"
-description = "slack bot for incomming webhook"
-optional = false
-python-versions = "*"
-files = [
-    {file = "slackweb-1.0.5.tar.gz", hash = "sha256:bb64f1f8fea99fc04ce8fb300a09aab8fe51d86e25cedafb1eaca07f7b828c36"},
-]
-
-[[package]]
 name = "sniffio"
 version = "1.3.0"
 description = "Sniff out which async library your code is running under"
@@ -1802,4 +1792,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "1f46b2f55651b3fe40f6a3a32d96ee58bb0d0e2fc25de6d27662279114a8bcea"
+content-hash = "7bd5f477016bb199bd7cdee19337a6716de249e8ba6b492c05e90835a03ac9f8"
