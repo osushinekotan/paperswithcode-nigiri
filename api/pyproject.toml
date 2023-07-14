@@ -1,10 +1,9 @@
 [tool.poetry]
-name = "paperswithcode-nigiri"
+name = "pwc-summary-api"
 version = "0.1.0"
 description = ""
 authors = ["masato <spmt3710@gmail.com>"]
 readme = "README.md"
-packages = [{include = "paperswithcode_nigiri"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"

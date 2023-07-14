@@ -1,6 +1,6 @@
 import requests
 
-from paperswithcode_nigiri.const import PWC_SEARCH_ENDPINT
+from app.const import PWC_SEARCH_ENDPINT
 
 
 def get_params(keyword, page: int, items_per_page: int) -> dict:
