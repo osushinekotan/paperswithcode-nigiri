@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from paperswithcode_nigiri.services.searcher import search_papers
-from paperswithcode_nigiri.services.summarizer import make_summary
+from app.services.searcher import search_papers
+from app.services.summarizer import make_summary
 
 router = APIRouter()
 

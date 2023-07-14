@@ -1,7 +1,7 @@
 import dotenv
 from fastapi import FastAPI
 
-from paperswithcode_nigiri.routers import health, paper
+from app.routers import health, paper
 
 dotenv.load_dotenv()
 
