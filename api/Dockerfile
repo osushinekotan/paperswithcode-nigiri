@@ -27,4 +27,4 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy the source code of the application
 COPY . /app/
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
