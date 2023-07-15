@@ -22,12 +22,12 @@ def get_meta_info(paper: dict) -> dict:
     return {"meta": paper}
 
 
-def make_summary(paper: dict) -> dict:
+def make_summary(paper: dict, model_name: str) -> dict:
     summary_by_llm = summarize(
         title=paper["title"],
         abstract=paper["abstract"],
         openai_api_key=str(os.getenv("OPENAI_API_KEY")),
-        model_name=str(os.getenv("LLM_MODEL")),
+        model_name=model_name,
         temperature=float(str(os.getenv("TEMPERATURE"))),
     )
     meta_info = get_meta_info(paper=paper)
