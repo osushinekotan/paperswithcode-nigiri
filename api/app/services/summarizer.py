@@ -22,7 +22,7 @@ def get_meta_info(paper: dict) -> dict:
     return {"meta": paper}
 
 
-def make_summary(paper: dict, model_name: str) -> dict:
+def make_summary(paper: dict, model_name: str= "gpt-3.5-turbo") -> dict:
     summary_by_llm = summarize(
         title=paper["title"],
         abstract=paper["abstract"],
