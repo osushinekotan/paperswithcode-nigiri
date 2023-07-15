@@ -7,7 +7,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends gcc
 
 # Copy over and install the poetry dependency files
-COPY ./api/pyproject.toml ./api/poetry.lock /app/
+COPY ./pyproject.toml ./poetry.lock /app/
 
 # Install poetry and dependencies
 RUN pip install --no-cache-dir --upgrade pip \
