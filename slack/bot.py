@@ -1,5 +1,6 @@
 import os
 
+import requests
 from fastapi import FastAPI, Request
 from slack_bolt import Ack, App
 from slack_bolt.adapter.fastapi import SlackRequestHandler
@@ -11,7 +12,7 @@ app = App(
 )
 
 
-@app.shortcut("research_paper_search")
+@app.shortcut("search_papers")
 def open_modal(ack: Ack, body: dict, client):
     ack()
     client.views_open(
@@ -31,20 +32,24 @@ def open_modal(ack: Ack, body: dict, client):
                     "type": "input",
                     "block_id": "num_paper_block",
                     "label": {"type": "plain_text", "text": "Number of Papers"},
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "num_paper",
-                        "initial_value": "1",
-                    },
+                    "element": {"type": "plain_text_input", "action_id": "num_paper", "initial_value": "1"},
                 },
                 {
                     "type": "input",
                     "block_id": "openai_model",
                     "label": {"type": "plain_text", "text": "OpenAI Model"},
                     "element": {
-                        "type": "plain_text_input",
+                        "type": "static_select",
                         "action_id": "openai_model",
-                        "initial_value": "gpt-3.5-turbo",
+                        "initial_option": {
+                            "text": {"type": "plain_text", "text": "gpt-3.5-turbo"},
+                            "value": "gpt-3.5-turbo",
+                        },
+                        "options": [
+                            {"text": {"type": "plain_text", "text": "gpt-3.5-turbo"}, "value": "gpt-3.5-turbo"},
+                            {"text": {"type": "plain_text", "text": "gpt-4"}, "value": "gpt-4"},
+                            {"text": {"type": "plain_text", "text": "None"}, "value": "None"},
+                        ],
                     },
                 },
             ],
@@ -53,21 +58,35 @@ def open_modal(ack: Ack, body: dict, client):
     )
 
 
+def get_result(endpoint: str, params: dict):
+    if params["openai_model"] == "None":
+        url = f"{endpoint}/paper/"
+        del params["openai_model"]
+        return requests.get(url=url, params=params).json()
+    else:
+        url = f"{endpoint}/formatted_summary/"
+        return requests.get(url=url, params=params).json()
+
+
 # モーダルからのデータ受信と処理
 @app.view("view_1")
 def handle_submission(ack: Ack, body: dict, client):
     ack()
     # ユーザーが入力した情報を取得
-    keyword = body["view"]["state"]["values"]["keyword_block"]["keyword"]["value"]
-    num_paper = body["view"]["state"]["values"]["num_paper_block"]["num_paper"]["value"]
+    params = {
+        "keyword": body["view"]["state"]["values"]["keyword_block"]["keyword"]["value"],
+        "items_per_page": body["view"]["state"]["values"]["num_paper_block"]["num_paper"]["value"],
+        "openai_model": body["view"]["state"]["values"]["openai_model"]["openai_model"]["selected_option"]["value"],
+        "page": 1,
+    }
 
-    # APIにリクエストを送り、結果を取得
-    # ここではサンプルとして静的なテキストを設定
-    result = f"Keyword: {keyword}, Number of papers: {num_paper}"
+    endpoint = os.getenv("PWC_NIGIRI_API_ENDPOINT")
+    result = get_result(endpoint, params)
 
     # 結果をユーザーに送信
     user_id = body["user"]["id"]
-    client.chat_postMessage(channel=user_id, text=result)
+    for text in result:
+        client.chat_postMessage(channel=user_id, text=str(text))
 
 
 fastapi_app = FastAPI()
