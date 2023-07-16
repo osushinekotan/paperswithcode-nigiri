@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "slack"
+version = "0.1.0"
+description = ""
+authors = ["masato <spmt3710@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+slack-bolt = "^1.18.0"
+fastapi = "^0.100.0"
+uvicorn = "^0.23.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+mypy = "^1.4.1"
+ruff = "^0.0.278"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
