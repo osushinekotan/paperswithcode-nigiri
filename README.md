@@ -1,6 +1,9 @@
 # paperswithcode-nigiri
 論文翻訳 & 要約をする Slack Bots
 
+<img width="510" alt="image" src="https://github.com/osushinekotan/paperswithcode-nigiri/assets/137482396/9acb5cab-f370-4055-8ff7-1ab35ac5122b">
+
+
 ## API
 - paperswithcode api で任意の keyword を検索し、任意の数取得します。取得した論文それぞのタイトルとアブストラクトを OpenAI api を用いて日本語に翻訳し、要約を追加します。
 - FastAPI を使っています。
